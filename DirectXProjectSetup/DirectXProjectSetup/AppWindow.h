@@ -6,6 +6,12 @@
 #include "VertexBuffer.h"
 #include "Vertex.h"
 
+#include "vector"
+#include <iostream>
+#include "Quad.h"
+
+using namespace std;
+
 class AppWindow : public Window
 {
 public:
@@ -19,4 +25,8 @@ public:
 private:
 	SwapChain* m_swap_chain;
 	VertexBuffer* m_vb;
+
+	vector<Quad*> QuadList;
+
+	
 };

@@ -1,11 +1,5 @@
 #include "AppWindow.h"
-#include "vector"
 
-#include <iostream>
-
-#include "Quad.h";
-
-using namespace std;
 
 
 
@@ -68,6 +62,8 @@ void AppWindow::onCreate()
 	vertex4->position.z = 0.0f;
 	Quad* quad1 = new Quad(*vertex1, *vertex2, *vertex3, *vertex4);
 
+	
+
 	Vertex* vertex5 = new Vertex(); 
 	vertex5->position.x = 0.25f;//{0.25f, -0.25f, 0.0f},    // INDEX 4
 	vertex5->position.y = -0.25f;
@@ -110,36 +106,9 @@ void AppWindow::onCreate()
 	vertex8->position.z = 0.0f;
 	Quad* quad3 = new Quad(*vertex5, *vertex6, *vertex7, *vertex8);
 
-
-	m_vb = GraphicsEngine::get()->createVertexBuffer();
-	UINT size_list = ARRAYSIZE(quad1->vertexList) * 3;
-
-	GraphicsEngine::get()->createShaders();
-
-	void* shader_byte_code = nullptr;
-	UINT size_shader = 0;
-	GraphicsEngine::get()->getShaderBufferAndSize(&shader_byte_code, &size_shader);
-
-	vector<Vertex> vertexList;
-	for (int i = 0; i < 4; i++)
-	{
-		vertexList.push_back(quad1->vertexList[i]);
-	}
-
-	for (int i = 0; i < 4; i++)
-	{
-		vertexList.push_back(quad2->vertexList[i]);
-	}
-
-	for (int i = 0; i < 4; i++)
-	{
-		vertexList.push_back(quad3->vertexList[i]);
-	}
-
-
-	m_vb->load(&vertexList[0], sizeof(Vertex), size_list, shader_byte_code, size_shader);
-	
-
+	QuadList.push_back(quad1);
+	QuadList.push_back(quad2);
+	QuadList.push_back(quad3);
 
 }
 
@@ -154,11 +123,12 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 	//SET DEFAULT SHADER IN THE GRAPHICS PIPELINE TO BE ABLE TO DRAW
 	GraphicsEngine::get()->setShaders();
-	//SET THE VERTICES OF THE TRIANGLE TO DRAW
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
 
-	// FINALLY DRAW THE TRIANGLE
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleList(m_vb->getSizeVertexList(), 0);
+	for (Quad* quad : QuadList)
+	{
+		quad->DrawQuad();
+	}
+
 	m_swap_chain->present(true);
 }
 
